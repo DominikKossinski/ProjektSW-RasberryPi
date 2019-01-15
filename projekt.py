@@ -110,9 +110,10 @@ def collectMeasurements(cur, db):
                     maksymalnaH = humidity
                 if minimalnaH > humidity:
                     minimalna = humidity
+                sleep(1)
             else:
                 print('Failed to get reading. Try again!')
-            sleep(1)
+            
         sumaT = (sumaT - maksymalnaT - minimalnaT) / (count - 2)
         sumaH = (sumaH - maksymalnaH - minimalnaH) / (count - 2)
         print('Srednia Temp={0:0.1f}*C  Humidity={1:0.1f}%\n'.format(sumaT, sumaH))
@@ -179,6 +180,8 @@ def checkLogin(cur, db):
                         logged = True
                     else:
                         logged = False
+                        GPIO.output(16, GPIO.HIGH)
+                        GPIO.output(20, GPIO.LOW)
                 else:
                     sem.acquire()
                     cur.execute("UPDATE UZYTKOWNICY SET ZALOGOWANY = FALSE")
@@ -193,7 +196,7 @@ def checkLogin(cur, db):
 GPIO.setup(3, GPIO.IN)
 GPIO.add_event_detect(3, GPIO.RISING)
 GPIO.add_event_callback(3, f)
-db = mysql.connector.connect(host="192.168.1.109", user="rasberry",
+db = mysql.connector.connect(host="192.168.43.7", user="rasberry",
                      passwd="rasberry123", db="projektSW",
                              auth_plugin='mysql_native_password')
 
